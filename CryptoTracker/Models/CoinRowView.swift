@@ -18,6 +18,7 @@ struct CoinRowView: View {
             
             if showHoldingsColumn {
                 holdingsColumn
+                    .animation(.none, value: showHoldingsColumn)
             }
             
             priceColumn
