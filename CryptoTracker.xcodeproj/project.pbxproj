@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B9302C22C8D84FF00217BB1 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9302C12C8D84FF00217BB1 /* SearchBarView.swift */; };
 		5BFC69082C8C30D800D61163 /* CryptoTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC69072C8C30D800D61163 /* CryptoTrackerApp.swift */; };
 		5BFC690A2C8C30D800D61163 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC69092C8C30D800D61163 /* ContentView.swift */; };
 		5BFC690C2C8C30D900D61163 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BFC690B2C8C30D900D61163 /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B9302C12C8D84FF00217BB1 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		5BFC69042C8C30D800D61163 /* CryptoTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CryptoTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BFC69072C8C30D800D61163 /* CryptoTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoTrackerApp.swift; sourceTree = "<group>"; };
 		5BFC69092C8C30D800D61163 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,6 +64,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B9302C02C8D84E400217BB1 /* SearchBarView */ = {
+			isa = PBXGroup;
+			children = (
+				5B9302C12C8D84FF00217BB1 /* SearchBarView.swift */,
+			);
+			path = SearchBarView;
+			sourceTree = "<group>";
+		};
 		5BFC68FB2C8C30D800D61163 = {
 			isa = PBXGroup;
 			children = (
@@ -81,9 +91,9 @@
 		5BFC69062C8C30D800D61163 /* CryptoTracker */ = {
 			isa = PBXGroup;
 			children = (
+				5BFC69072C8C30D800D61163 /* CryptoTrackerApp.swift */,
 				5BFC69412C8CE46800D61163 /* Utilities */,
 				5BFC693E2C8CBE0E00D61163 /* Services */,
-				5BFC69072C8C30D800D61163 /* CryptoTrackerApp.swift */,
 				5BFC69332C8C6B2500D61163 /* Models */,
 				5BFC69172C8C364F00D61163 /* Extensions */,
 				5BFC69242C8C3A6900D61163 /* Core */,
@@ -150,6 +160,7 @@
 		5BFC69282C8C3A7900D61163 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5B9302C02C8D84E400217BB1 /* SearchBarView */,
 				5BFC69442C8CF70E00D61163 /* CoinImage */,
 				5BFC692A2C8C3A8400D61163 /* CircleButton */,
 			);
@@ -280,6 +291,7 @@
 				5BFC69082C8C30D800D61163 /* CryptoTrackerApp.swift in Sources */,
 				5BFC692C2C8C3A9100D61163 /* CircleButtonView.swift in Sources */,
 				5BFC692E2C8C3A9A00D61163 /* HomeView.swift in Sources */,
+				5B9302C22C8D84FF00217BB1 /* SearchBarView.swift in Sources */,
 				5BFC69192C8C365B00D61163 /* Color.swift in Sources */,
 				5BFC69302C8C416F00D61163 /* CircleButtonAnimationView.swift in Sources */,
 				5BFC694C2C8CFB8300D61163 /* CoinImageViewModel.swift in Sources */,
