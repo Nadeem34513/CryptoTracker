@@ -10,6 +10,7 @@ import SwiftUI
 struct CoinRowView: View {
     let coin: CoinModel
     let showHoldingsColumn: Bool
+    
     var body: some View {
         HStack(spacing: 0) {
             leftColumn
@@ -38,9 +39,21 @@ extension CoinRowView {
                 .font(.headline)
                 .frame(minWidth: 30)
                 .foregroundStyle(Color.theme.secondaryText)
+            
             //img
-            Circle()
+            CoinImageView(coin: coin)
                 .frame(width: 30, height: 30)
+            
+//            AsyncImage(url: URL(string: coin.image), content: { image in
+//                image
+//                    .resizable()
+//                    .frame(width: 30, height: 30)
+//            }, placeholder: {
+//                ProgressView()
+//            })
+            
+            
+                
             
             Text(coin.symbol.uppercased())
                 .font(.headline)
