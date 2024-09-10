@@ -13,11 +13,18 @@ class HomeViewModel: ObservableObject {
     @Published var portfolioCoins: [CoinModel] = []
     @Published var searchText: String = ""
     @Published var statistics: [StatisticModel] = []
+    @Published var sortOption: SortOption = .holdings
     
     private var coinDataService = CoinDataService.instance
     private var marketDataService = MarketDataService.instance
     private var portfolioDataService = PortfolioDataService.instance
     private var cancellables = Set<AnyCancellable>()
+    
+    enum SortOption {
+        case rank, rankReversed
+        case holdings, holdingsReversed
+        case price, priceReversed
+    }
     
     init() {
         addSubscribers()
@@ -25,9 +32,9 @@ class HomeViewModel: ObservableObject {
     
     func addSubscribers() {
         $searchText
-            .combineLatest(coinDataService.$allCoins)
+            .combineLatest(coinDataService.$allCoins, $sortOption)
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .map(filterCoins)
+            .map(filterAndSortCoins)
             .sink { [weak self] filteredCoins in
                 self?.allCoins = filteredCoins
             }
@@ -45,7 +52,8 @@ class HomeViewModel: ObservableObject {
             .combineLatest(portfolioDataService.$savedEntity)
             .map(mapToCoinMode)
             .sink { [weak self] returnedCoins in
-                self?.portfolioCoins = returnedCoins
+                guard let self = self else { return }
+                self.portfolioCoins = self.sortPortfolioCoinsIfNeeded(coins: returnedCoins)
             }
             .store(in: &cancellables)
     }
@@ -68,6 +76,39 @@ class HomeViewModel: ObservableObject {
             }
     }
     
+    private func filterAndSortCoins(text: String, startingCoins: [CoinModel], sort: SortOption) -> [CoinModel] {
+        var updatedCoins = filterCoins(text: text, startingCoins: startingCoins)
+        sortCoins(sort: sort, coin: &updatedCoins)
+        return updatedCoins
+    }
+    
+    // inout would make changes to the current variable(here coin) and will not return a new coin
+    // normally return coin.sorted(by: { $0.rank < $1.rank }) would return a new coin model, inout will overwrite the changes to the current var
+    // more efficient
+    private func sortCoins(sort: SortOption, coin: inout [CoinModel]) {
+        switch sort {
+            case .rank, .holdings:
+                coin.sort(by: { $0.rank < $1.rank })
+            case .rankReversed, .holdingsReversed:
+                coin.sort(by: { $0.rank > $1.rank })
+            case .price:
+                coin.sort(by: { $0.currentPrice > $1.currentPrice })
+            case .priceReversed:
+                coin.sort(by: { $0.currentPrice < $1.currentPrice })
+        }
+    }
+    
+    private func sortPortfolioCoinsIfNeeded(coins: [CoinModel]) -> [CoinModel] {
+        switch sortOption {
+            case .holdings:
+                return coins.sorted(by: { $0.currentHoldingsValue > $1.currentHoldingsValue })
+            case .holdingsReversed:
+                return coins.sorted(by: { $0.currentHoldingsValue < $1.currentHoldingsValue })
+            default:
+                return coins
+        }
+    }
+ 
     private func filterCoins(text: String, startingCoins: [CoinModel]) -> [CoinModel] {
         guard !text.isEmpty else { return startingCoins }
         

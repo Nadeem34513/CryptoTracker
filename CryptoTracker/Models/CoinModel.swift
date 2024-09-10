@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct CoinModel: Identifiable, Codable {
+struct CoinModel: Identifiable, Codable, Hashable {
     let id, symbol, name: String
     let image: String
     let currentPrice: Double
@@ -22,6 +22,14 @@ struct CoinModel: Identifiable, Codable {
     let sparklineIn7D: SparklineIn7D?
     let priceChangePercentage24HInCurrency: Double?
     let currentHoldings: Double?
+    
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
+    }
+        
+    public static func == (lhs: CoinModel, rhs: CoinModel) -> Bool {
+        return lhs.id == rhs.id
+    }
     
     enum CodingKeys: String, CodingKey {
         case id, symbol, name, image
