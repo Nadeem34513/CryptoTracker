@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PortfolioView: View {
     @EnvironmentObject private var vm: HomeViewModel
+    @Environment(\.dismiss) var dismiss
     @State private var selectedCoin: CoinModel? = nil
     @State private var quantityText: String = ""
     @State private var showCheckMark: Bool = false
@@ -35,6 +36,11 @@ struct PortfolioView: View {
                     trailingNavBarButton
                 }
             }
+            .onChange(of: vm.searchText) { _, newValue in
+                if newValue == "" {
+                    removeSelectedCoin()
+                }
+            }
         }
     }
 }
@@ -48,12 +54,12 @@ extension PortfolioView {
     private var coinLogoList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 10) {
-                ForEach(vm.allCoins) { coin in
+                ForEach(vm.searchText.isEmpty ? vm.portfolioCoins : vm.allCoins) { coin in
                     CoinLogoView(coin: coin)
                         .frame(width: 75)
                         .onTapGesture {
                             withAnimation(.easeIn(duration: 0.1)) {
-                                selectedCoin = coin
+                                updatedSelectedCoin(coin: coin)
                             }
                         }
                         .background(
@@ -64,6 +70,15 @@ extension PortfolioView {
             }
             .frame(height: 120)
             .padding(.leading)
+        }
+    }
+    
+    private func updatedSelectedCoin(coin: CoinModel) {
+        selectedCoin = coin
+        
+        if let portfolioCoin = vm.portfolioCoins.first(where: { $0.id == coin.id}),
+           let amount = portfolioCoin.currentHoldings {
+            quantityText = String(amount)
         }
     }
     
@@ -122,9 +137,13 @@ extension PortfolioView {
     }
     
     private func saveButtonPressed() {
-        guard let coin = selectedCoin else { return }
+        guard 
+            let coin = selectedCoin,
+            let amount = Double(quantityText) 
+        else { return }
         
         // save data
+        vm.updatePortfolio(coin: coin, amount: amount)
         
         // show checkmark
         withAnimation(.easeIn) {
@@ -136,9 +155,10 @@ extension PortfolioView {
         UIApplication.shared.endEditing()
         
         // hide checkmark after 1.5s
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
             withAnimation(.easeOut) {
                 showCheckMark = false
+                dismiss()
             }
         })
     }
